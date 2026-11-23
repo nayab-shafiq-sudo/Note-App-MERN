@@ -6,17 +6,29 @@ import cors from 'cors'
 
 const app = express()
 
-// MIDDLEWARE
+// DATABASE (listen ke bahar, taake Vercel par bhi connect ho)
+connectDb()
 
+// MIDDLEWARE
 app.use(cors({
-    origin: "http://localhost:5173",
+    origin: [process.env.FRONTEND_URL, "http://localhost:5173"].filter(Boolean),
     credentials: true
 }))
 app.use(express.json())
+
+// HEALTH CHECK (browser mein backend link kholne par "Cannot GET /" na aaye)
+app.get('/', (req, res) => {
+    res.json({ success: true, message: "API is running" })
+})
+
 app.use('/user', userRouter)
 
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, ()=>{
-    connectDb() 
-    console.log(`server is listening at port ${PORT}`)
-})
+// LOCAL par server chalao, Vercel par nahi
+if (!process.env.VERCEL) {
+    const PORT = process.env.PORT || 3000;
+    app.listen(PORT, () => {
+        console.log(`server is listening at port ${PORT}`)
+    })
+}
+
+export default app
