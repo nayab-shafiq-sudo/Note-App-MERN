@@ -29,7 +29,7 @@ export const registerUser = async (req, res) => {
         //  CREATING TOKEN
         const token = await jwt.sign({id: user._id}, process.env.JWT_SECRET, {expiresIn: "10m"})
         //  SENDING VERIFICATION MAIL
-        verifyMail(token, email) 
+        await verifyMail(token, email) 
         user.token = token
         await user.save()
 

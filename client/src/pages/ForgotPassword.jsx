@@ -3,16 +3,13 @@ import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import {
   Alert,
-  AlertAction,
   AlertDescription,
-  AlertTitle,
 } from "@/components/ui/alert"
 import { CheckCircle, Loader2 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import axios from 'axios'
-import { getData } from '@/context/UserContext'
 import { toast } from 'sonner'
 
 const ForgotPassword = () => {
@@ -27,7 +24,7 @@ const ForgotPassword = () => {
         e.preventDefault()
         try {
             setIsLoading(true)
-            const res = await axios.post(`http://localhost:3000/user/forgot-password`, {email})
+            const res = await axios.post(`${import.meta.env.VITE_API_URL}/user/forgot-password`, {email})
             if (res.data.success){
                 navigate(`/verify-otp/${email}`)
                 toast.success(res.data.message)

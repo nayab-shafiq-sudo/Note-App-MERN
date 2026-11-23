@@ -38,7 +38,7 @@ const VerifyOTP = () => {
         }
         try {
             setIsLoading(true)
-            const res = await axios.post(`http://localhost:3000/user/verify-otp/${email}`, {
+            const res = await axios.post(`${import.meta.env.VITE_API_URL}/user/verify-otp/${email}`, {
                 otp: finalOtp,
             })
             setSuccessMessage(res.data.message)
