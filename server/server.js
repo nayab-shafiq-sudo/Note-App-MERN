@@ -10,9 +10,23 @@ const app = express()
 connectDb()
 
 // MIDDLEWARE
+const allowedOrigins = [
+    process.env.FRONTEND_URL,
+    "https://note-app-mern-client.vercel.app",
+    "http://localhost:5173",
+]
+    .filter(Boolean)
+    .map((url) => url.replace(/\/$/, ""))   // aakhri "/" hata deta hai
+
 app.use(cors({
-    origin: [process.env.FRONTEND_URL, "http://localhost:5173"].filter(Boolean),
-    credentials: true
+    origin: (origin, callback) => {
+        // Postman ya server-to-server requests mein origin nahi hota
+        if (!origin || allowedOrigins.includes(origin)) {
+            return callback(null, true)
+        }
+        return callback(new Error("Not allowed by CORS"))
+    },
+    credentials: true,
 }))
 app.use(express.json())
 
